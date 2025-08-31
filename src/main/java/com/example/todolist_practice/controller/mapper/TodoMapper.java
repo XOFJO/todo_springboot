@@ -19,16 +19,6 @@ public class TodoMapper {
         );
     }
 
-    public Todo toEntity(TodoResponse todoResponse) {
-        if (todoResponse == null) {
-            return null;
-        }
-        return new Todo(
-            todoResponse.getId(),
-            todoResponse.getDetail(),
-            todoResponse.isStatus()
-        );
-    }
 
     public Todo toEntity(TodoRequest todoRequest) {
         if (todoRequest == null) {
