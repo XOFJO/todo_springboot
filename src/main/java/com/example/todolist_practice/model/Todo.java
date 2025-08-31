@@ -21,6 +21,7 @@ public class Todo {
     private boolean status = true;
 
     public Todo() {
+
     }
 
 
