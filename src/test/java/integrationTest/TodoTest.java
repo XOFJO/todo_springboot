@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -58,7 +58,7 @@ public class TodoTest {
     public void should_return_todo_when_get_todo_by_id() throws Exception {
         // given
         List<Todo> todos = todoRepository.findAll();
-        Todo givenTodo = todos.get(0); // Use the first todo from the list
+        Todo givenTodo = todos.get(0);
 
         // when
         ResultActions perform = client.perform(MockMvcRequestBuilders.get("/api/v1/todos/" + givenTodo.getId()));
@@ -68,5 +68,66 @@ public class TodoTest {
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(givenTodo.getId()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.detail").value(givenTodo.getDetail()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(givenTodo.isStatus()));
+    }
+
+    @Test
+    public void should_create_todo_when_post_todo() throws Exception {
+        // given
+        String todoJson = "{\"detail\":\"New todo item\"}";
+        int initialCount = todoRepository.findAll().size();
+
+        // when
+        ResultActions perform = client.perform(MockMvcRequestBuilders.post("/api/v1/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoJson));
+
+        // then
+        perform.andExpect(MockMvcResultMatchers.status().isCreated());
+        perform.andExpect(MockMvcResultMatchers.jsonPath("$.detail").value("New todo item"));
+        perform.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(false));
+
+        List<Todo> todos = todoRepository.findAll();
+        assert todos.size() == initialCount + 1;
+    }
+
+    @Test
+    public void should_delete_todo_when_delete_todo_by_id() throws Exception {
+        // given
+        List<Todo> todos = todoRepository.findAll();
+        Todo todoToDelete = todos.get(0);
+        int initialCount = todos.size();
+
+        // when
+        ResultActions perform = client.perform(MockMvcRequestBuilders.delete("/api/v1/todos/" + todoToDelete.getId()));
+
+        // then
+        perform.andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        List<Todo> remainingTodos = todoRepository.findAll();
+        assert remainingTodos.size() == initialCount - 1;
+        assert !remainingTodos.contains(todoToDelete);
+    }
+
+    @Test
+    public void should_update_todo_when_put_todo_by_id() throws Exception {
+        // given
+        List<Todo> todos = todoRepository.findAll();
+        Todo todoToUpdate = todos.get(0);
+        String updatedTodoJson = "{\"detail\":\"Updated todo item\",\"status\":true}";
+
+        // when
+        ResultActions perform = client.perform(MockMvcRequestBuilders.put("/api/v1/todos/" + todoToUpdate.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedTodoJson));
+
+        // then
+        perform.andExpect(MockMvcResultMatchers.status().isOk());
+        perform.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(todoToUpdate.getId()));
+        perform.andExpect(MockMvcResultMatchers.jsonPath("$.detail").value("Updated todo item"));
+        perform.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true));
+
+        Todo updatedTodo = todoRepository.findById(todoToUpdate.getId()).orElseThrow();
+        assert updatedTodo.getDetail().equals("Updated todo item");
+        assert updatedTodo.isStatus();
     }
 }

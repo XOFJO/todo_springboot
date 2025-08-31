@@ -18,6 +18,11 @@ public class Todo {
         this.detail = detail;
     }
 
+    public Todo(String detail, boolean status) {
+        this.detail = detail;
+        this.status = status;
+    }
+
     public Todo(int id, String detail, boolean status) {
         this.id = id;
         this.detail = detail;

@@ -1,12 +1,12 @@
 package com.example.todolist_practice.controller;
 
+import com.example.todolist_practice.controller.dto.TodoRequest;
 import com.example.todolist_practice.model.Todo;
 import com.example.todolist_practice.service.TodoService;
 import com.example.todolist_practice.controller.mapper.TodoMapper;
 import com.example.todolist_practice.controller.dto.TodoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +23,8 @@ public class TodoController {
 
     @PostMapping("/todos")
     @ResponseStatus(HttpStatus.CREATED)
-    public TodoResponse addTodo(@RequestBody Todo todo) {
-        return todoMapper.toResponse(todoService.addTodo(todo));
+    public TodoResponse addTodo(@RequestBody TodoRequest todoRequest) {
+        return todoMapper.toResponse(todoService.addTodo(todoMapper.toEntity(todoRequest)));
     }
 
     @GetMapping("/todos/{id}")
