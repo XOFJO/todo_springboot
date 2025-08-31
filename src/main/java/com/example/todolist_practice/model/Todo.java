@@ -1,6 +1,5 @@
 package com.example.todolist_practice.model;
 
-
 import jakarta.persistence.*;
 
 @Entity

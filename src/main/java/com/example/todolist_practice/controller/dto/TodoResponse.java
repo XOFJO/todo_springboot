@@ -1,15 +1,17 @@
 package com.example.todolist_practice.controller.dto;
 
-import com.example.todolist_practice.model.TodoList;
-
 public class TodoResponse {
     private int id;
     private String detail;
     private boolean status;
-    private TodoList todoList;
 
     public TodoResponse() {
+    }
 
+    public TodoResponse(int id, String detail, boolean status) {
+        this.id = id;
+        this.detail = detail;
+        this.status = status;
     }
 
     public int getId() {
@@ -35,13 +37,4 @@ public class TodoResponse {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    public TodoList getTodoList() {
-        return todoList;
-    }
-
-    public void setTodoList(TodoList todoList) {
-        this.todoList = todoList;
-    }
 }
-
