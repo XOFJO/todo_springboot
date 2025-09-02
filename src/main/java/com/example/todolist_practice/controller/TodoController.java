@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/")
 public class TodoController {
     private final TodoService todoService;
     private final TodoMapper todoMapper;
@@ -33,8 +33,19 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    public List<TodoResponse> getTodos() {
-        return todoService.getAllTodos()
+    public List<TodoResponse> getTodos(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<Todo> allTodos = todoService.getAllTodos();
+
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, allTodos.size());
+
+        if (startIndex >= allTodos.size()) {
+            return List.of(); // Return empty list if page is beyond available data
+        }
+
+        return allTodos.subList(startIndex, endIndex)
                 .stream()
                 .map(todoMapper::toResponse)
                 .collect(Collectors.toList());

@@ -3,7 +3,7 @@ package com.example.todolist_practice.controller.dto;
 public class TodoResponse {
     private int id;
     private String detail;
-    private boolean status;
+    private boolean completed;
 
     public TodoResponse() {
     }
@@ -11,7 +11,7 @@ public class TodoResponse {
     public TodoResponse(int id, String detail, boolean status) {
         this.id = id;
         this.detail = detail;
-        this.status = status;
+        this.completed = status;
     }
 
     public int getId() {
@@ -30,11 +30,11 @@ public class TodoResponse {
         this.detail = detail;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setCompleted(boolean status) {
+        this.completed = status;
     }
 }
