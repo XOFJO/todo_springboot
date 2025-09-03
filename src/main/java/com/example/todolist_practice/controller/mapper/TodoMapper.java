@@ -25,8 +25,8 @@ public class TodoMapper {
             return null;
         }
         return new Todo(
-            todoRequest.getDetail(),
-            todoRequest.isStatus()
+            todoRequest.getTitle(),
+            todoRequest.isCompleted()
         );
     }
 }
